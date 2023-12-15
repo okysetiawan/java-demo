@@ -4,7 +4,14 @@ public class EmployeeDto {
     private int id;
     private String name;
     private String email;
-    private String age;
+    private Integer age;
+
+    public EmployeeDto(int id, String name, String email, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.age = age;
+    }
 
     public int getId() {
         return id;
@@ -30,11 +37,11 @@ public class EmployeeDto {
         this.email = email;
     }
 
-    public String getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 }

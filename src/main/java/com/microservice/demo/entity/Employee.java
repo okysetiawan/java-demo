@@ -18,7 +18,7 @@ public class Employee {
     private String email;
 
     @Column(name = "age")
-    private String age;
+    private Integer age;
 
     public int getId() {
         return id;
@@ -44,11 +44,18 @@ public class Employee {
         this.email = email;
     }
 
-    public String getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(Integer age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Employee[id=%d, name='%s', email='%s', age='%d']",
+                id, name, email, age);
     }
 }
