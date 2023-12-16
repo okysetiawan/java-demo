@@ -1,9 +1,11 @@
 package com.microservice.demo.dto.api;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class ApiResponse<T> extends ResponseEntity<Object> {
+@Getter
+public class ApiResponse<T> extends ResponseEntity<T> {
 
     private final int status;
     private final String message;
@@ -16,20 +18,8 @@ public class ApiResponse<T> extends ResponseEntity<Object> {
         this.data = data;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public static <T> ApiResponse<T> generateResponse(String message, HttpStatus status, T responseObj) {
-        return new ApiResponse<>(status.value(), message, responseObj, status);
+    public static <T> ApiResponse<T> generateResponse(HttpStatus status, T responseObj) {
+        return new ApiResponse<>(status.value(), "OK", responseObj, status);
     }
 
     public static <T> ApiResponse<T> generateError(HttpStatus status, String message) {
