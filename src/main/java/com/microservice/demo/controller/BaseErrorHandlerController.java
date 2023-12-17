@@ -1,5 +1,6 @@
 package com.microservice.demo.controller;
 
+import com.microservice.demo.common.CommonApiResponse;
 import com.microservice.demo.configuration.exception.BusinessLogicException;
 import com.microservice.demo.dto.api.ApiResponse;
 import org.slf4j.Logger;
@@ -27,20 +28,20 @@ public class BaseErrorHandlerController {
             errors.add(fieldError.getField() + " " + fieldError.getDefaultMessage());
         }
 
-        return ApiResponse.generateError(HttpStatus.BAD_REQUEST, errors.toString());
+        return CommonApiResponse.createError(errors.toString(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Object> exception(Exception e) {
         LOGGER.error("Exception = {}", e.getMessage(), e);
-        return ApiResponse.generateError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return CommonApiResponse.createError(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BusinessLogicException.class)
     public ApiResponse<Object> businessLogicException(BusinessLogicException ble) {
         LOGGER.error("BusinessLogicException = {}", ble.getMessage(), ble);
-        return ApiResponse.generateError(ble.getCode(), ble.getMessage());
+        return CommonApiResponse.createError(ble.getMessage(), ble.getCode());
     }
 
 }

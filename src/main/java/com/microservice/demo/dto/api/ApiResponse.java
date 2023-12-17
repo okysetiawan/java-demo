@@ -1,28 +1,70 @@
 package com.microservice.demo.dto.api;
 
-import lombok.Getter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 
-@Getter
-public class ApiResponse<T> extends ResponseEntity<T> {
+import java.io.Serializable;
+import java.util.Objects;
 
-    private final int status;
-    private final String message;
-    private final T data;
+@JsonPOJOBuilder
+@JsonSerialize
+@JsonDeserialize
+public class ApiResponse<T> implements Serializable {
 
-    public ApiResponse(int status, String message, T data, HttpStatus httpStatus) {
-        super(data, httpStatus);
-        this.status = status;
+    private int status;
+    private String message;
+    private T data;
+
+    public ApiResponse(HttpStatus status, String message, T data) {
+        this.status = status.value();
         this.message = message;
         this.data = data;
     }
 
-    public static <T> ApiResponse<T> generateResponse(HttpStatus status, T responseObj) {
-        return new ApiResponse<>(status.value(), "OK", responseObj, status);
+    public int getStatus() {
+        return status;
     }
 
-    public static <T> ApiResponse<T> generateError(HttpStatus status, String message) {
-        return new ApiResponse<>(status.value(), message, null, status);
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public boolean equals(Object compare) {
+        if (compare.getClass() != this.getClass()) {
+            return false;
+        }
+        return ObjectUtils.nullSafeEquals(compare, this);
+    }
+
+    public int hashCode() {
+        return ObjectUtils.nullSafeHash(this);
+    }
+
+    @Override
+    public String toString() {
+        return "ApiResponse{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
     }
 }
