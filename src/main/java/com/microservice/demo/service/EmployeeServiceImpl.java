@@ -8,6 +8,7 @@ import com.microservice.demo.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -21,12 +22,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Mono<List<EmployeeDto>> getEmployees() {
         return this.employeeRepo.findAll(Sort.by("id").descending())
-                .collectList()
-                .flatMap(employees -> {
-                    List<EmployeeDto> response = new ArrayList<>();
-                    employees.forEach(employee -> response.add(EmployeeParser.createFromEntity(employee)));
-                    return Mono.just(response);
-                });
+                .map(EmployeeParser::createFromEntity)
+                .collectList();
     }
 
     public Mono<EmployeeDto> getEmployeeById(Long id) {

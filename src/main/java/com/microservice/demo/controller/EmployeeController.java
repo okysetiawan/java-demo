@@ -21,7 +21,7 @@ public class EmployeeController {
     @GetMapping(value = "")
     private Mono<ApiResponse<List<EmployeeDto>>> getEmployees() {
         return employeeService.getEmployees()
-                .map(CommonApiResponse::createResponse);
+                .map(employeeDto -> CommonApiResponse.createResponse(employeeDto));
     }
 
     @GetMapping(value = "/{id}")
