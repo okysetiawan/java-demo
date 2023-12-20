@@ -17,4 +17,8 @@ public class CommonApiResponse {
     public static <T> ApiResponse<T> createResponse(HttpStatus status, T data) {
         return new ApiResponse<>(status, "OK", data);
     }
+
+    public static <T> ApiResponse<T> createResponse(T data) {
+        return new ApiResponse<>(HttpStatus.OK, "OK", data);
+    }
 }

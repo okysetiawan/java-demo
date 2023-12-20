@@ -22,7 +22,7 @@ public class EmployeeController {
     @GetMapping(value = "/{id}")
     private Mono<ApiResponse<EmployeeDto>> getEmployeeById(@PathVariable("id") int id) {
         return employeeService.getEmployeeById(id)
-                .map(employeeDto -> CommonApiResponse.createResponse(HttpStatus.OK, employeeDto));
+                .map(CommonApiResponse::createResponse);
     }
 
 }
