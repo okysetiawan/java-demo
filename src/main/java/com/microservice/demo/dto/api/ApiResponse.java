@@ -56,7 +56,7 @@ public class ApiResponse<T> implements Serializable {
     }
 
     public int hashCode() {
-        return ObjectUtils.nullSafeHash(this);
+        return ObjectUtils.nullSafeHashCode(this);
     }
 
     @Override

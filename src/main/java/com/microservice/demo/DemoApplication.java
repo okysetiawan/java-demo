@@ -2,10 +2,8 @@ package com.microservice.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
-import org.springframework.web.reactive.config.EnableWebFlux;
 
-@SpringBootApplication
+@SpringBootApplication()
 public class DemoApplication {
 
 	public static void main(String[] args) {
