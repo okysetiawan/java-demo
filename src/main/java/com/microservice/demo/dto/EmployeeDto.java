@@ -1,23 +1,30 @@
 package com.microservice.demo.dto;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Data
 public class EmployeeDto {
-    private int id;
+    private Long id;
     private String name;
     private String email;
     private Integer age;
 
-    public EmployeeDto(int id, String name, String email, Integer age) {
+    @Builder
+    public EmployeeDto(Long id, String name, String email, Integer age) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.age = age;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -18,6 +18,6 @@ public class ErrorHandlerController extends BaseErrorHandlerController {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Object> runTimeException(RuntimeException re) {
         LOGGER.error("Runtime Error = {}", re.getMessage(), re);
-        return CommonApiResponse.createResponse(HttpStatus.INTERNAL_SERVER_ERROR, re.getMessage());
+        return CommonApiResponse.createError(re.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
