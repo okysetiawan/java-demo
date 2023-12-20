@@ -8,13 +8,11 @@ import com.microservice.demo.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -39,24 +37,32 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public Mono<EmployeeDto> createEmployee(EmployeeDto req) {
-        return this.employeeRepo.findOneByEmail(req.getEmail())
-                .flatMap(existingEmployee -> {
-                    if (!ObjectUtils.isEmpty(existingEmployee)) {
-                        return Mono.error(new BusinessLogicException(HttpStatus.BAD_REQUEST, "Please use another email"));
-                    }
-
-                    Employee employee = EmployeeParser.createFromDto(req);
-                    return this.employeeRepo.save(employee);
-                })
+        return validateExisted(req)
                 .switchIfEmpty(this.employeeRepo.save(EmployeeParser.createFromDto(req)))
                 .map(EmployeeParser::createFromEntity);
     }
 
+    private Mono<Employee> validateExisted(EmployeeDto req) {
+        return this.employeeRepo.findOneByEmail(req.getEmail())
+                .flatMap(existingEmployee -> {
+                    if (!Objects.equals(existingEmployee.getId(), req.getId())) {
+                        return Mono.error(new BusinessLogicException(HttpStatus.BAD_REQUEST, "Please use another email"));
+                    }
+                    return Mono.empty();
+                });
+    }
 
     public Mono<EmployeeDto> updateEmployee(EmployeeDto req) {
-        return Mono.defer(() -> this.employeeRepo.findOneById(req.getId()))
-                .switchIfEmpty(Mono.error(new BusinessLogicException(HttpStatus.NOT_FOUND, "Employee not found")))
-                .flatMap(existingEmployee -> this.employeeRepo.save(existingEmployee))
+        return this.validateExisted(req)
+                .then(this.employeeRepo.findOneById(req.getId()))
+                .flatMap(existingEmployee -> {
+                    if (Objects.isNull(existingEmployee)) {
+                        return Mono.error(new BusinessLogicException(HttpStatus.NOT_FOUND, "employee not found"));
+                    }
+                    existingEmployee.setAge(req.getAge());
+                    existingEmployee.setName(req.getName());
+                    return this.employeeRepo.save(existingEmployee);
+                })
                 .map(EmployeeParser::createFromEntity);
     }
 

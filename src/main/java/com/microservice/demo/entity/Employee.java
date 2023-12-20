@@ -2,12 +2,15 @@ package com.microservice.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "employee")
-public class Employee {
+public class Employee implements Serializable {
+
+    private static final long serialVersionUID = 576262425917631757L;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
