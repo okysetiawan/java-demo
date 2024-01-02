@@ -8,10 +8,8 @@ import com.microservice.demo.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,10 +25,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public Mono<EmployeeDto> getEmployeeById(Long id) {
-        return Mono.defer(() ->
-                this.employeeRepo.findOneById(id).
-                        map(employee -> new EmployeeDto(employee.getId(), employee.getName(), employee.getEmail(), employee.getAge()))
-        ).switchIfEmpty(Mono.error(new BusinessLogicException(HttpStatus.BAD_REQUEST, "employee not found")));
+        return this.employeeRepo.findOneById(id)
+                .switchIfEmpty(Mono.error(new BusinessLogicException(HttpStatus.BAD_REQUEST, "employee not found")))
+                .map(EmployeeParser::createFromEntity);
     }
 
     public Mono<EmployeeDto> createEmployee(EmployeeDto req) {
