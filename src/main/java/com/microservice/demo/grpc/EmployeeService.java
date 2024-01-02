@@ -1,14 +1,16 @@
-package com.microservice.demo.grpc.controller;
+package com.microservice.demo.grpc;
 
 import com.microservice.demo.EmployeeDetailResponse;
 import com.microservice.demo.EmployeeServiceGrpc;
-import com.microservice.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+@Controller
+public class EmployeeService extends EmployeeServiceGrpc.EmployeeServiceImplBase {
 
-public class EmployeeController extends EmployeeServiceGrpc.EmployeeServiceImplBase {
-
-    private EmployeeService employeeService;
+    // this is  still null
+    @Autowired
+    private com.microservice.demo.service.EmployeeService employeeService;
 
     @Override
     public void detail(com.microservice.demo.EmployeeDetailRequest request,
