@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @GRpcService
 public class EmployeeGRpcService extends EmployeeServiceGrpc.EmployeeServiceImplBase {
 
-    // this is  still null
     @Autowired
     private EmployeeService employeeService;
 
